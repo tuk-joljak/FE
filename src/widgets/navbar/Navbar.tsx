@@ -11,7 +11,7 @@ function Navbar() {
   return (
     <NavigationMenu className="p-5">
       <Link to="/">
-        <NavigationMenuLink>I력서닷컴</NavigationMenuLink>
+        <NavigationMenuLink className="mr-4 font-bold text-h1 text-primary-500">이력서닷컴</NavigationMenuLink>
       </Link>
       <NavigationMenuList>
         <NavigationMenuItem>
