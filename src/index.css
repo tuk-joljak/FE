@@ -58,15 +58,15 @@
   }
 }
 
+.center {
+  @apply flex items-center justify-center;
+}
+
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
-}
-
-.center {
-  @apply flex items-center justify-center;
 }
