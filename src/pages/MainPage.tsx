@@ -6,7 +6,7 @@ function MainPage() {
   return (
     <div className="flex-col gap-20 center">
       <MainCarousel />
-      <div className="gap-4 center">
+      <div className="gap-4 center w-[1160px]">
         <MainRecruitList />
         <SelectList />
       </div>

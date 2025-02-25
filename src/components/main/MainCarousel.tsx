@@ -7,7 +7,7 @@ import {
 
 export function MainCarousel() {
   return (
-    <Carousel className="w-[800px] h-[400px] mt-[24px]">
+    <Carousel className="w-[1160px] h-[400px] mt-[24px]">
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem key={index}>
