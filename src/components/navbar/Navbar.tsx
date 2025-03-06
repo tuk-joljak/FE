@@ -30,7 +30,7 @@ function Navbar() {
           <Link to="/recruit">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/recruit") ? "bg-accent text-white" : ""
+                isActive("/recruit") ? "bg-primary text-white" : ""
               }`}
             >
               취업공고
@@ -41,7 +41,7 @@ function Navbar() {
           <Link to="/resume">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/resume") ? "bg-accent text-white" : ""
+                isActive("/resume") ? "bg-primary text-white" : ""
               }`}
             >
               이력서
@@ -52,7 +52,7 @@ function Navbar() {
           <Link to="/calendar">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/calendar") ? "bg-accent text-white" : ""
+                isActive("/calendar") ? "bg-primary text-white" : ""
               }`}
             >
               캘린더
@@ -63,7 +63,7 @@ function Navbar() {
           <Link to="/study-group">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/study-group") ? "bg-accent text-white" : ""
+                isActive("/study-group") ? "bg-primary text-white" : ""
               }`}
             >
               스터디그룹
@@ -74,7 +74,7 @@ function Navbar() {
           <Link to="/board">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/board") ? "bg-accent text-white" : ""
+                isActive("/board") ? "bg-primary text-white" : ""
               }`}
             >
               게시판
