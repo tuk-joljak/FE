@@ -4,6 +4,7 @@ import MainPage from "@/pages/MainPage";
 import RecruitPage from "@/pages/RecruitPage";
 import RecruitDetailPage from "@/pages/RecruitDetailPage";
 import BoardPage from "@/pages/BoradPage";
+import ResumePage from "@/pages/ResumePage";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       },
       { path: "/:id", element: <RecruitDetailPage /> },
       { path: "/board", element: <BoardPage /> },
+      {
+        path: "/resume",
+        element: <ResumePage />,
+      },
     ],
   },
 ]);
