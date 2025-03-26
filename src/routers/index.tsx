@@ -5,23 +5,25 @@ import RecruitPage from "@/pages/RecruitPage";
 import RecruitDetailPage from "@/pages/RecruitDetailPage";
 import BoardPage from "@/pages/BoradPage";
 import ResumePage from "@/pages/ResumePage";
+import ErrorPage from "@/pages/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
-      { path: "/", element: <MainPage /> },
+      { index: true, element: <MainPage /> },
       {
-        path: "/recruit",
-        element: <RecruitPage />,
+        path: "recruit",
+        children: [
+          { index: true, element: <RecruitPage /> },
+          { path: ":id", element: <RecruitDetailPage /> },
+        ],
       },
-      { path: "/:id", element: <RecruitDetailPage /> },
-      { path: "/board", element: <BoardPage /> },
-      {
-        path: "/resume",
-        element: <ResumePage />,
-      },
+      { path: "board", element: <BoardPage /> },
+      { path: "resume", element: <ResumePage /> },
+      { path: "*", element: <ErrorPage /> },
     ],
   },
 ]);

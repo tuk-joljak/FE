@@ -1,19 +1,19 @@
 import { create } from "zustand";
 
+export type Category = "전체" | "프론트엔드" | "백엔드" | "데이터 엔지니어" | "DevOps" | "AI/ML";
+
 interface RecruitmentCategory {
-  currentCategory: "popular" | "frontend" | "backend" | "bookmark";
+  currentCategory: Category;
 }
 
 type RecruitmentStoreState = {
   currentCategory: RecruitmentCategory["currentCategory"];
-  setCurrentCategory: (
-    newCategory: RecruitmentCategory["currentCategory"]
-  ) => void;
-  getAllCategories: () => RecruitmentCategory["currentCategory"][]; // 모든 카테고리를 반환하는 함수
+  setCurrentCategory: (newCategory: Category) => void;
+  getAllCategories: () => Category[];
 };
 
 export const useRecruitmentStore = create<RecruitmentStoreState>((set) => ({
-  currentCategory: "popular",
+  currentCategory: "전체",
   setCurrentCategory: (newCategory) => set({ currentCategory: newCategory }),
-  getAllCategories: () => ["popular", "frontend", "backend", "bookmark"], // 모든 카테고리 반환
+  getAllCategories: () => ["전체", "프론트엔드", "백엔드", "데이터 엔지니어", "DevOps", "AI/ML"],
 }));

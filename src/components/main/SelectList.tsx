@@ -1,42 +1,40 @@
-import { useRecruitmentStore } from "@/stores/main"; // Ensure this path is correct based on your project structure.
+import { useRecruitmentStore } from "@/stores/main";
+import { motion } from "framer-motion";
+import type { Category } from "@/stores/main";
 
-const SelectList = () => {
-  // Destructure the needed functions and state from the store.
-  const { currentCategory, setCurrentCategory, getAllCategories } =
-    useRecruitmentStore();
+const categories: Category[] = [
+  "전체",
+  "프론트엔드",
+  "백엔드",
+  "데이터 엔지니어",
+  "DevOps",
+  "AI/ML",
+];
 
-  // Get all categories from the store.
-  const allCategories = getAllCategories();
+export function SelectList() {
+  const { currentCategory, setCurrentCategory } = useRecruitmentStore();
 
-  // Handling category change event.
-  const handleCategoryChange = (newCategory: string) => {
-    // Type guard to ensure newCategory is of the correct type
-    if (["popular", "frontend", "backend", "bookmark"].includes(newCategory)) {
-      setCurrentCategory(
-        newCategory as "popular" | "frontend" | "backend" | "bookmark"
-      );
-    }
+  const handleCategoryChange = (category: Category) => {
+    setCurrentCategory(category);
   };
 
   return (
-    <div className="flex flex-col items-center justify-between w-36 h-[300px]">
-      {" "}
-      {/* Adjusted for TailwindCSS */}
-      {allCategories.map((category) => (
-        <button
+    <div className="flex flex-wrap gap-4 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+      {categories.map((category) => (
+        <motion.button
           key={category}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => handleCategoryChange(category)}
-          className={`w-full py-3 my-1 text-white font-medium rounded-md transition-colors duration-300 ease-in-out ${
+          className={`px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
             currentCategory === category
-              ? "bg-primary"
-              : "bg-gray-400 hover:bg-gray-500"
-          }`} // Using TailwindCSS for styling
+              ? "bg-primary text-white"
+              : "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
+          }`}
         >
-          {category.charAt(0).toUpperCase() + category.slice(1)}
-        </button>
+          {category}
+        </motion.button>
       ))}
     </div>
   );
-};
-
-export default SelectList;
+}
