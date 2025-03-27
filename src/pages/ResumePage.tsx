@@ -1,60 +1,115 @@
-import { Button } from "@/components/ui/button";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-
-interface FileWithPreview extends File {
-  preview: string;
-}
+import { useState } from "react";
+import { analyzeResume } from "@/api/resume";
+import type { ResumeAnalysisResponse } from "@/api/resume";
+import { Upload } from "lucide-react";
+import ResumeAnalysisResult from "@/components/Resume/ResumeAnalysisResult";
 
 const ResumePage = () => {
-  const [file, setFile] = useState<FileWithPreview | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<ResumeAnalysisResponse | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const fileWithPreview: FileWithPreview = Object.assign(acceptedFiles[0], {
-        preview: URL.createObjectURL(acceptedFiles[0]),
-      });
-      setFile(fileWithPreview);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setFile(selectedFile);
+      setError(null);
+    } else {
+      setError('PDF 파일만 업로드 가능합니다.');
+      setFile(null);
     }
-  }, []);
+  };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    multiple: false,
-    accept: { "pdf/*": [] }, // 수정된 부분
-  });
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    if (!file) {
+      setError('파일을 선택해주세요.');
+      return;
+    }
 
-  // 파일 제출 핸들러
-  const handleSubmit = () => {
-    console.log("Submitting file:", file);
-    setFile(null); // 제출 후 파일 초기화
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await analyzeResume(file);
+      console.log('분석 결과:', response);
+      setAnalysis(response);
+    } catch (err) {
+      console.error('에러 발생:', err);
+      setError('이력서 분석 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="container p-4 mx-auto">
-      <div
-        {...getRootProps({
-          className:
-            "dropzone flex justify-center items-center p-6 border-2 border-dashed border-primary rounded-lg cursor-pointer hover:border-accent",
-        })}
-      >
-        <input {...getInputProps()} />
-        {!file ? (
-          <p className="text-lg text-gray-700">
-            드래그 앤 드롭이나 이 곳을 눌러 이력서를 올려주세요.
-          </p>
-        ) : (
-          <img src={file.preview} alt="Preview" className="h-auto max-w-full" />
+    <div className="min-h-screen py-8 bg-gray-50">
+      <div className="max-w-4xl px-4 mx-auto">
+        <div className="p-8 mb-6 bg-white rounded-lg shadow-md">
+          <h1 className="mb-6 text-2xl font-bold text-gray-900">
+            이력서 분석
+          </h1>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="p-8 border-2 border-gray-300 border-dashed rounded-lg">
+              <div className="flex flex-col items-center justify-center">
+                <Upload className="w-12 h-12 mb-4 text-gray-400" />
+                <div className="text-center">
+                  <label className="cursor-pointer">
+                    <span className="px-4 py-2 mt-2 text-base leading-normal text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600">
+                      PDF 파일 선택
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                </div>
+                {file && (
+                  <div className="mt-4 text-sm text-gray-600">
+                    선택된 파일: {file.name}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {error && (
+              <div className="text-sm text-red-500">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={!file || isLoading}
+              className={`w-full py-3 px-6 rounded-lg font-semibold text-white 
+                ${!file || isLoading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+                } transition-colors`}
+            >
+              {isLoading ? '분석 중...' : '분석하기'}
+            </button>
+          </form>
+        </div>
+
+        {isLoading && (
+          <div className="flex items-center justify-center py-8">
+            <div className="w-12 h-12 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+          </div>
         )}
+
+        {error && (
+          <div className="p-4 mt-4 border border-red-200 rounded-lg bg-red-50">
+            <p className="text-red-600">{error}</p>
+          </div>
+        )}
+
+        {analysis && <ResumeAnalysisResult analysis={analysis} />}
       </div>
-      {file && (
-        <Button
-          onClick={handleSubmit}
-          className="px-4 py-2 mt-4 text-white rounded bg-primary hover:bg-accent"
-        >
-          제출하기
-        </Button>
-      )}
     </div>
   );
 };
