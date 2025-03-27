@@ -1,4 +1,3 @@
-import React from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -27,10 +26,10 @@ function Navbar() {
       </Link>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link to="/recruit">
+          <Link to="/jobposting">
             <NavigationMenuLink
               className={`${navigationMenuTriggerStyle()} ${
-                isActive("/recruit") ? "bg-primary text-white" : ""
+                isActive("/jobposting") ? "bg-primary text-white" : ""
               }`}
             >
               취업공고

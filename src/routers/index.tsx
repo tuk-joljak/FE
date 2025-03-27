@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./Layout";
 import MainPage from "@/pages/MainPage";
-import RecruitPage from "@/pages/RecruitPage";
-import RecruitDetailPage from "@/pages/RecruitDetailPage";
 import BoardPage from "@/pages/BoradPage";
 import ResumePage from "@/pages/ResumePage";
 import ErrorPage from "@/pages/ErrorPage";
+import JobPostingPage from "@/pages/JobPostingPage";
+import JobPostingDetailPage from "@/pages/JobPostingDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -15,10 +15,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <MainPage /> },
       {
-        path: "recruit",
+        path: "jobposting",
         children: [
-          { index: true, element: <RecruitPage /> },
-          { path: ":id", element: <RecruitDetailPage /> },
+          { index: true, element: <JobPostingPage /> },
+          { path: ":id", element: <JobPostingDetailPage /> },
         ],
       },
       { path: "board", element: <BoardPage /> },
