@@ -5,7 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Briefcase, GraduationCap, Heart, Share2, Moon, Sun } from "lucide-react";
+import {
+  Building2,
+  MapPin,
+  Briefcase,
+  GraduationCap,
+  Heart,
+  Share2,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { motion } from "framer-motion";
 
@@ -33,7 +42,7 @@ const JobPostingDetailPage = () => {
   useEffect(() => {
     const loadJobPostingDetail = async () => {
       if (!id) return;
-      
+
       try {
         setIsLoading(true);
         const response = await fetchJobPostingDetail(id);
@@ -63,7 +72,9 @@ const JobPostingDetailPage = () => {
   if (error || !jobPosting) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-red-500">{error || "채용공고를 찾을 수 없습니다."}</div>
+        <div className="text-lg text-red-500">
+          {error || "채용공고를 찾을 수 없습니다."}
+        </div>
       </div>
     );
   }
@@ -99,7 +110,11 @@ const JobPostingDetailPage = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="mr-2"
             >
-              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
             </Button>
             <Button variant="ghost" size="icon" onClick={handleShare}>
               <Share2 className="w-5 h-5" />
@@ -115,7 +130,9 @@ const JobPostingDetailPage = () => {
               {/* 헤더 섹션 */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">[{jobPosting.companyName}] {jobPosting.title}</h1>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    [{jobPosting.companyName}] {jobPosting.title}
+                  </h1>
                   <Badge variant="secondary" className="px-4 py-1 text-lg">
                     정규직
                   </Badge>
@@ -140,10 +157,20 @@ const JobPostingDetailPage = () => {
                     🚆3호선 역세권 기업
                   </Badge>
                   <Badge variant="outline" className="text-sm">
-                    <a href="/positions?tag=FREE_DRESS" className="hover:text-primary">#자유복장</a>
+                    <a
+                      href="/positions?tag=FREE_DRESS"
+                      className="hover:text-primary"
+                    >
+                      #자유복장
+                    </a>
                   </Badge>
                   <Badge variant="outline" className="text-sm">
-                    <a href="/positions?tag=FREE_BOOK" className="hover:text-primary">#도서구입비지원</a>
+                    <a
+                      href="/positions?tag=FREE_BOOK"
+                      className="hover:text-primary"
+                    >
+                      #도서구입비지원
+                    </a>
                   </Badge>
                 </div>
               </div>
@@ -159,27 +186,30 @@ const JobPostingDetailPage = () => {
                     기술 스택
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {jobPosting.stack.split(',').map((tech) => (
-                      <Badge key={tech} variant="outline" className="px-4 py-2">
-                        <div className="flex items-center gap-2">
-                          <img
-                            alt={tech}
-                            height="20"
-                            width="20"
-                            src={`https://cdn.jumpit.co.kr/images/stacks/${tech}.png`}
-                            className="rounded-sm"
-                          />
-                          {tech}
-                        </div>
-                      </Badge>
+                    {jobPosting.stack.split(",").map((tech) => (
+                      <div className="flex items-center gap-2">
+                        <img
+                          alt={tech}
+                          src={`https://img.shields.io/badge/${encodeURIComponent(
+                            tech
+                          )}-informational?style=flat&logo=${encodeURIComponent(
+                            tech
+                          )}&logoColor=white`}
+                          className="rounded-sm h-[30px]"
+                        />
+                      </div>
                     ))}
                   </div>
                 </section>
 
                 {/* 주요 업무 */}
                 <section>
-                  <h2 className="mb-4 text-2xl font-semibold dark:text-white">주요 업무</h2>
-                  <div className="text-gray-700 whitespace-pre-line">{jobPosting.task}</div>
+                  <h2 className="mb-4 text-2xl font-semibold dark:text-white">
+                    주요 업무
+                  </h2>
+                  <div className="text-gray-700 whitespace-pre-line">
+                    {jobPosting.task}
+                  </div>
                 </section>
 
                 {/* 자격 요건 */}
@@ -188,14 +218,20 @@ const JobPostingDetailPage = () => {
                     <GraduationCap className="w-6 h-6" />
                     자격 요건
                   </h2>
-                  <div className="text-gray-700 whitespace-pre-line">{jobPosting.qualification}</div>
+                  <div className="text-gray-700 whitespace-pre-line">
+                    {jobPosting.qualification}
+                  </div>
                 </section>
 
                 {/* 우대사항 */}
                 {jobPosting.preference !== "-" && (
                   <section>
-                    <h2 className="mb-4 text-2xl font-semibold dark:text-white">우대사항</h2>
-                    <div className="text-gray-700 whitespace-pre-line">{jobPosting.preference}</div>
+                    <h2 className="mb-4 text-2xl font-semibold dark:text-white">
+                      우대사항
+                    </h2>
+                    <div className="text-gray-700 whitespace-pre-line">
+                      {jobPosting.preference}
+                    </div>
                   </section>
                 )}
 
@@ -207,7 +243,9 @@ const JobPostingDetailPage = () => {
                   </h2>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     <div className="space-y-2">
-                      <h3 className="font-medium text-gray-900 dark:text-white">Culture</h3>
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        Culture
+                      </h3>
                       <ul className="space-y-1 text-gray-700 dark:text-gray-300">
                         <li>• 탄력근무제, 재택근무</li>
                         <li>• 워라벨 중시 (9to6 지향)</li>
@@ -216,7 +254,9 @@ const JobPostingDetailPage = () => {
                       </ul>
                     </div>
                     <div className="space-y-2">
-                      <h3 className="font-medium text-gray-900 dark:text-white">Benefit</h3>
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        Benefit
+                      </h3>
                       <ul className="space-y-1 text-gray-700 dark:text-gray-300">
                         <li>• 장기근속자 포상</li>
                         <li>• 교육비/자격증 지원</li>
@@ -225,7 +265,9 @@ const JobPostingDetailPage = () => {
                       </ul>
                     </div>
                     <div className="space-y-2">
-                      <h3 className="font-medium text-gray-900 dark:text-white">Health & Family</h3>
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        Health & Family
+                      </h3>
                       <ul className="space-y-1 text-gray-700 dark:text-gray-300">
                         <li>• 종합건강검진</li>
                         <li>• 경조사비 지원</li>
@@ -238,8 +280,12 @@ const JobPostingDetailPage = () => {
 
                 {/* 채용절차 */}
                 <section>
-                  <h2 className="mb-4 text-2xl font-semibold dark:text-white">채용절차</h2>
-                  <div className="text-gray-700">{jobPosting.hiringProcess}</div>
+                  <h2 className="mb-4 text-2xl font-semibold dark:text-white">
+                    채용절차
+                  </h2>
+                  <div className="text-gray-700">
+                    {jobPosting.hiringProcess}
+                  </div>
                 </section>
               </div>
 
