@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/", // API 기본 URL
-  timeout: 5000, // 요청 제한시간 5초
+  timeout: 10000, // 요청 제한시간 5초
   headers: {
     "Content-Type": "application/json",
   },
