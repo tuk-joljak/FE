@@ -5,7 +5,11 @@ import MainPage from "@/pages/MainPage";
 // import RecruitDetailPage from "@/pages/RecruitDetailPage";
 import BoardPage from "@/pages/BoradPage";
 import ResumePage from "@/pages/ResumePage";
-import CalendarPage from "@/pages/CalendarPage";
+import ErrorPage from "@/pages/ErrorPage";
+import JobPostingPage from "@/pages/JobPostingPage";
+import JobPostingDetailPage from "@/pages/JobPostingDetailPage";
+import { StudyGroupPage } from "@/pages/StudyGroupPage";
+import StudyGroupDetailPage from "@/pages/StudyGroupDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +27,16 @@ export const router = createBrowserRouter([
         path: "/resume",
         element: <ResumePage />,
       },
-      { path: "/calendar", element: <CalendarPage /> }
+      { path: "board", element: <BoardPage /> },
+      { path: "resume", element: <ResumePage /> },
+      {
+        path: "study-group",
+        children: [
+          { index: true, element: <StudyGroupPage /> },
+          { path: ":id", element: <StudyGroupDetailPage /> },
+        ],
+      },
+      { path: "*", element: <ErrorPage /> },
     ],
   },
 ]);

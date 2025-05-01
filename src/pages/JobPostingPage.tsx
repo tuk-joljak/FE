@@ -23,6 +23,7 @@ const JobPostingPage = () => {
         }
       } catch (err) {
         setError("채용공고를 불러오는데 실패했습니다.");
+        console.error(err);
       } finally {
         setIsLoading(false);
       }
@@ -54,9 +55,9 @@ const JobPostingPage = () => {
           break;
         case "deadline":
           result = result.filter((post) => post.deadline !== null);
-          result.sort((a, b) => 
-            a.deadline && b.deadline ? 
-              new Date(a.deadline).getTime() - new Date(b.deadline).getTime() 
+          result.sort((a, b) =>
+            a.deadline && b.deadline
+              ? new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
               : 0
           );
           break;
@@ -64,9 +65,10 @@ const JobPostingPage = () => {
           result = result.filter((post) => !post.career);
           break;
         case "newbie":
-          result = result.filter((post) => 
-            post.location.includes("신입") || 
-            (post.career && post.career.includes("신입"))
+          result = result.filter(
+            (post) =>
+              post.location.includes("신입") ||
+              (post.career && post.career.includes("신입"))
           );
           break;
       }
@@ -79,7 +81,7 @@ const JobPostingPage = () => {
     <div className="min-h-screen py-8 bg-gray-50">
       <div className="space-y-6">
         <FilterBar />
-        <JobPostingList 
+        <JobPostingList
           jobPostings={filteredPostings}
           isLoading={isLoading}
           error={error}
@@ -89,4 +91,4 @@ const JobPostingPage = () => {
   );
 };
 
-export default JobPostingPage; 
+export default JobPostingPage;
