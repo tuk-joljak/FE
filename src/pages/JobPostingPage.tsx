@@ -78,7 +78,7 @@ const JobPostingPage = () => {
   }, [searchParams, jobPostings]);
 
   return (
-    <div className="min-h-screen py-8 bg-gray-50">
+    <div className="py-8 min-h-screen bg-gray-50">
       <div className="space-y-6">
         <FilterBar />
         <JobPostingList

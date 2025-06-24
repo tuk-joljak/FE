@@ -7,41 +7,48 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { fetchAllJobPostings } from "@/api/jobPosting";
+import type { JobPosting } from "@/types/jobPosting";
+
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80";
 
 export function MainCarousel() {
-  const images = [
-    {
-      src: "https://cdn.jumpit.co.kr/lg/images/dabin_3358/20230016180011665_1557_1090.webp",
-      title: "프론트엔드 개발자 채용",
-      description: "최고의 프론트엔드 개발자와 함께하세요",
-    },
-    {
-      src: "https://cdn.jumpit.co.kr/lg/images/jnyoon_106/20250414100440214_567_378.webp",
-      title: "백엔드 개발자 채용",
-      description: "안정적인 백엔드 시스템을 구축하세요",
-    },
-    {
-      src: "https://cdn.jumpit.co.kr/lg/images/dabin_3358/20253303153347599_597_430.webp",
-      title: "데이터 엔지니어 채용",
-      description: "빅데이터 시대의 핵심 인재가 되세요",
-    },
-    {
-      src: "https://cdn.jumpit.co.kr/lg/images/210217/20240829110802451_1080_790.webp",
-      title: "DevOps 엔지니어 채용",
-      description: "클라우드 인프라를 구축하고 관리하세요",
-    },
-    {
-      src: "https://cdn.jumpit.co.kr/lg/images/38804/20241528141511980/profile-image.webp",
-      title: "AI/ML 엔지니어 채용",
-      description: "인공지능의 미래를 함께 만들어가세요",
-    },
-  ];
+  const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchAllJobPostings();
+        if (response.success) {
+          setJobPostings(response.jobPostingList.slice(0, 5));
+        } else {
+          setError(response.message || "채용공고를 불러오지 못했습니다.");
+        }
+      } catch {
+        setError("서버 연결 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="py-8 text-center">로딩 중...</div>;
+  }
+  if (error) {
+    return <div className="py-8 text-center text-red-500">{error}</div>;
+  }
 
   return (
-    <Carousel className="w-full max-w-5xl mx-auto">
+    <Carousel className="mx-auto w-full max-w-5xl">
       <CarouselContent>
-        {images.map((image, index) => (
-          <CarouselItem key={index}>
+        {jobPostings.map((job) => (
+          <CarouselItem key={job.jobPostingId}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -52,14 +59,14 @@ export function MainCarousel() {
                 <CardContent className="relative p-0">
                   <div className="relative h-[400px]">
                     <img
-                      src={image.src}
-                      alt={image.title}
+                      src={DEFAULT_IMAGE}
+                      alt={job.title}
                       className="object-cover w-full h-full"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="text-2xl font-bold mb-2">{image.title}</h3>
-                      <p className="text-gray-200">{image.description}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t to-transparent from-black/60" />
+                    <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
+                      <h3 className="mb-2 text-2xl font-bold">{job.title}</h3>
+                      <p className="text-gray-200">{job.companyName}</p>
                     </div>
                   </div>
                 </CardContent>

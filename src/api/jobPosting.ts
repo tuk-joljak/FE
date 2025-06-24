@@ -1,5 +1,6 @@
 import axiosInstance from './axios';
 import { JobPostingResponse } from '../types/jobPosting';
+import type { JobPostingCommentListResponse, CreateJobPostingCommentRequest, CreateJobPostingCommentResponse, DeleteJobPostingCommentResponse } from '@/types/user';
 
 export const fetchAllJobPostings = async (): Promise<JobPostingResponse> => {
   try {
@@ -38,4 +39,52 @@ export const fetchJobPostingDetail = async (jobPostingId: string): Promise<JobPo
     console.error('채용공고 상세 조회 실패:', error);
     throw error;
   }
+};
+
+// 공고 댓글 전체 조회 API
+export const fetchJobPostingComments = async (targetId: string): Promise<JobPostingCommentListResponse> => {
+  const response = await axiosInstance.get<JobPostingCommentListResponse>(`/comment/all/JOBPOSTING/${targetId}`);
+  return response.data;
+};
+
+// 공고 댓글 작성 API
+export const createJobPostingComment = async (data: CreateJobPostingCommentRequest): Promise<CreateJobPostingCommentResponse> => {
+  const response = await axiosInstance.post<CreateJobPostingCommentResponse>(
+    '/comment',
+    data
+  );
+  return response.data;
+};
+
+// 공고 댓글 삭제 API
+export const deleteJobPostingComment = async (commentId: string): Promise<DeleteJobPostingCommentResponse> => {
+  const response = await axiosInstance.delete<DeleteJobPostingCommentResponse>(
+    '/comment',
+    { data: { commentId } }
+  );
+  return response.data;
+};
+
+// 게시물(커뮤니티) 댓글 전체 조회 API
+export const fetchCommunityComments = async (targetId: string) => {
+  const response = await axiosInstance.get<JobPostingCommentListResponse>(`/comment/all/COMMUNITY/${targetId}`);
+  return response.data;
+};
+
+// 게시물(커뮤니티) 댓글 작성 API
+export const createCommunityComment = async (data: CreateJobPostingCommentRequest) => {
+  const response = await axiosInstance.post<CreateJobPostingCommentResponse>(
+    '/comment',
+    { ...data }
+  );
+  return response.data;
+};
+
+// 게시물(커뮤니티) 댓글 삭제 API
+export const deleteCommunityComment = async (commentId: string) => {
+  const response = await axiosInstance.delete<DeleteJobPostingCommentResponse>(
+    '/comment',
+    { data: { commentId } }
+  );
+  return response.data;
 }; 

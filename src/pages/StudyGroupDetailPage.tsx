@@ -16,10 +16,12 @@ import { fetchStudyGroupDetail } from "@/api/studygroup";
 import { StudyGroupModal } from "@/components/StudyGroup/StudyGroupModal";
 
 interface StudyGroupDetailInfo {
-  content: string | null;
+  description: string;
   startDate: string;
   endDate: string;
-  studyGroupId?: string;
+  studyGroupId: string;
+  studyGroupName: string;
+  isRecruiting: boolean;
 }
 
 export function StudyGroupDetailPage() {
@@ -48,6 +50,8 @@ export function StudyGroupDetailPage() {
           setStudyGroup({
             ...response.studyGroupInfo,
             studyGroupId: id,
+            studyGroupName: response.studyGroupInfo.studyGroupName,
+            isRecruiting: response.studyGroupInfo.isRecruiting,
           });
         } else {
           setError(
@@ -87,6 +91,8 @@ export function StudyGroupDetailPage() {
           setStudyGroup({
             ...response.studyGroupInfo,
             studyGroupId: id,
+            studyGroupName: response.studyGroupInfo.studyGroupName,
+            isRecruiting: response.studyGroupInfo.isRecruiting,
           });
         }
       } catch (err) {
@@ -115,33 +121,33 @@ export function StudyGroupDetailPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="container px-4 py-8 mx-auto">
         <div className="flex items-center mb-6">
           <Button variant="ghost" className="mr-2">
             <ArrowLeft size={18} />
           </Button>
-          <Skeleton className="h-8 w-64" />
+          <Skeleton className="w-64 h-8" />
         </div>
         <Card>
           <CardHeader>
-            <Skeleton className="h-8 w-3/4 mb-2" />
-            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="mb-2 w-3/4 h-8" />
+            <Skeleton className="w-1/2 h-6" />
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <Skeleton className="h-6 w-32 mb-2" />
-              <Skeleton className="h-12 w-full" />
+              <Skeleton className="mb-2 w-32 h-6" />
+              <Skeleton className="w-full h-12" />
             </div>
             <div>
-              <Skeleton className="h-6 w-32 mb-2" />
+              <Skeleton className="mb-2 w-32 h-6" />
               <div className="flex gap-2">
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-20" />
+                <Skeleton className="w-20 h-8" />
+                <Skeleton className="w-20 h-8" />
               </div>
             </div>
           </CardContent>
           <CardFooter>
-            <Skeleton className="h-10 w-full" />
+            <Skeleton className="w-full h-10" />
           </CardFooter>
         </Card>
       </div>
@@ -150,11 +156,11 @@ export function StudyGroupDetailPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="container px-4 py-8 mx-auto">
         <Button
           variant="ghost"
           onClick={handleGoBack}
-          className="mb-6 flex items-center gap-2"
+          className="flex gap-2 items-center mb-6"
         >
           <ArrowLeft size={18} />
           <span>뒤로 가기</span>
@@ -175,11 +181,11 @@ export function StudyGroupDetailPage() {
 
   if (!studyGroup) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="container px-4 py-8 mx-auto">
         <Button
           variant="ghost"
           onClick={handleGoBack}
-          className="mb-6 flex items-center gap-2"
+          className="flex gap-2 items-center mb-6"
         >
           <ArrowLeft size={18} />
           <span>뒤로 가기</span>
@@ -198,14 +204,14 @@ export function StudyGroupDetailPage() {
     );
   }
 
-  const tags = getTags(studyGroup.content);
+  const tags = getTags(studyGroup.description);
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container px-4 py-8 mx-auto">
       <Button
         variant="ghost"
         onClick={handleGoBack}
-        className="mb-6 flex items-center gap-2"
+        className="flex gap-2 items-center mb-6"
       >
         <ArrowLeft size={18} />
         <span>뒤로 가기</span>
@@ -215,10 +221,10 @@ export function StudyGroupDetailPage() {
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-2xl mb-2">
-                {studyGroup.content || "스터디 그룹"}
+              <CardTitle className="mb-2 text-2xl">
+                {studyGroup.description || "스터디 그룹"}
               </CardTitle>
-              <CardDescription className="flex items-center gap-2">
+              <CardDescription className="flex gap-2 items-center">
                 <CalendarDays size={16} />
                 <span>
                   {studyGroup.startDate} ~ {studyGroup.endDate}
@@ -228,7 +234,7 @@ export function StudyGroupDetailPage() {
             <Button
               variant="outline"
               onClick={handleEdit}
-              className="flex items-center gap-2"
+              className="flex gap-2 items-center"
             >
               <Edit size={16} />
               <span>수정</span>
@@ -238,14 +244,14 @@ export function StudyGroupDetailPage() {
 
         <CardContent className="space-y-6">
           <div>
-            <h3 className="text-lg font-semibold mb-2">스터디 내용</h3>
-            <p className="text-slate-600 dark:text-slate-300 whitespace-pre-line">
-              {studyGroup.content || "스터디 내용이 없습니다."}
+            <h3 className="mb-2 text-lg font-semibold">스터디 내용</h3>
+            <p className="whitespace-pre-line text-slate-600 dark:text-slate-300">
+              {studyGroup.description || "스터디 내용이 없습니다."}
             </p>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-2">태그</h3>
+            <h3 className="mb-2 text-lg font-semibold">태그</h3>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag, idx) => (
                 <Badge

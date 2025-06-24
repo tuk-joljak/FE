@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/", // API 기본 URL
-  timeout: 10000, // 요청 제한시간 5초
+  timeout: 20000, // 요청 제한시간 5초
   headers: {
     "Content-Type": "application/json",
   },
@@ -42,3 +42,10 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
+
+// Google OAuth2 로그인 API
+export async function googleOAuthLogin(code: string, registrationId: string) {
+  // /login/oauth2/code/{registrationId}?code=...
+  const url = `/login/oauth2/code/${registrationId}?code=${encodeURIComponent(code)}`;
+  return axiosInstance.get(url);
+}

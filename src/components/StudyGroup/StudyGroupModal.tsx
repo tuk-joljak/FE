@@ -21,7 +21,6 @@ import {
 import { createStudyGroup, updateStudyGroup } from "@/api/studygroup";
 import { StudyGroup } from "@/types/studygroup";
 
-// 임시 사용자 ID (실제로는 로그인 시스템에서 가져와야 함)
 const CURRENT_USER_ID = "3f7a1c68-4d9d-48f3-b96b-9e5b1f1ea1a6";
 
 interface StudyGroupModalProps {
@@ -41,7 +40,7 @@ export function StudyGroupModal({
   const [formData, setFormData] = useState({
     studyGroupName: "",
     category: "spring",
-    content: "",
+    description: "",
     startDate: "",
     endDate: "",
   });
@@ -52,7 +51,7 @@ export function StudyGroupModal({
       setFormData({
         studyGroupName: editData.studyGroupName || "",
         category: editData.category || "spring",
-        content: editData.content || "",
+        description: editData.description || "",
         startDate: editData.startDate || "",
         endDate: editData.endDate || "",
       });
@@ -60,7 +59,7 @@ export function StudyGroupModal({
       setFormData({
         studyGroupName: "",
         category: "spring",
-        content: "",
+        description: "",
         startDate: "",
         endDate: "",
       });
@@ -90,7 +89,7 @@ export function StudyGroupModal({
         // 수정: studyGroupId와 필요한 필드만 전송
         await updateStudyGroup({
           studyGroupId: editData.studyGroupId,
-          content: formData.content,
+          description: formData.description,
           startDate: formData.startDate,
           endDate: formData.endDate,
         });
@@ -101,7 +100,7 @@ export function StudyGroupModal({
           userId: CURRENT_USER_ID, // 실제 앱에서는 로그인된 사용자 ID 사용
           studyGroupName: formData.studyGroupName,
           category: formData.category,
-          content: formData.content,
+          description: formData.description,
           startDate: formData.startDate,
           endDate: formData.endDate,
         });
@@ -133,14 +132,14 @@ export function StudyGroupModal({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           {errorMessage && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
+            <div className="p-3 mb-4 text-red-600 rounded-md bg-red-50">
               {errorMessage}
             </div>
           )}
           <div className="grid gap-4 py-4">
             {/* 스터디명 - 생성 시에만 표시 */}
             {!editData && (
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="grid items-center grid-cols-4 gap-4">
                 <Label htmlFor="studyGroupName" className="text-right">
                   스터디명
                 </Label>
@@ -158,7 +157,7 @@ export function StudyGroupModal({
 
             {/* 카테고리 - 생성 시에만 표시 */}
             {!editData && (
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="grid items-center grid-cols-4 gap-4">
                 <Label htmlFor="category" className="text-right">
                   카테고리
                 </Label>
@@ -187,14 +186,14 @@ export function StudyGroupModal({
             )}
 
             {/* 스터디 내용 */}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="content" className="text-right">
+            <div className="grid items-center grid-cols-4 gap-4">
+              <Label htmlFor="description" className="text-right">
                 스터디 내용
               </Label>
               <Textarea
-                id="content"
-                name="content"
-                value={formData.content}
+                id="description"
+                name="description"
+                value={formData.description}
                 onChange={handleChange}
                 className="col-span-3"
                 placeholder="스터디 내용을 입력하세요"
@@ -203,7 +202,7 @@ export function StudyGroupModal({
             </div>
 
             {/* 시작일 */}
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid items-center grid-cols-4 gap-4">
               <Label htmlFor="startDate" className="text-right">
                 시작일
               </Label>
@@ -219,7 +218,7 @@ export function StudyGroupModal({
             </div>
 
             {/* 종료일 */}
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid items-center grid-cols-4 gap-4">
               <Label htmlFor="endDate" className="text-right">
                 종료일
               </Label>

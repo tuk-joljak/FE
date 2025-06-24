@@ -18,15 +18,19 @@ export const fetchAllStudyGroups = async (): Promise<StudyGroupResponse> => {
 };
 
 interface StudyGroupDetail {
-  id: string;
-  title: string;
-  content: string;
-  maxMembers: number;
-  currentMembers: number;
+  studyGroupId?: string;
+  studyGroupName: string;
+  description: string;
   startDate: string;
   endDate: string;
-  createdAt: string;
-  leader: {
+  isRecruiting: boolean;
+  id?: string;
+  title?: string;
+  content?: string;
+  maxMembers?: number;
+  currentMembers?: number;
+  createdAt?: string;
+  leader?: {
     id: string;
     name: string;
   };
@@ -45,6 +49,9 @@ export const fetchStudyGroupDetail = async (
     const response = await axiosInstance.get<StudyGroupDetailResponse>(
       `/study/group/${studyGroupId}`
     );
+    if (response.data && response.data.studyGroupInfo && !response.data.studyGroupInfo.studyGroupId) {
+      response.data.studyGroupInfo.studyGroupId = studyGroupId;
+    }
     return response.data;
   } catch (error) {
     console.error("스터디 그룹 상세 조회 실패:", error);
@@ -86,4 +93,13 @@ export const createStudyGroup = async (
     console.error("스터디 그룹 생성 실패:", error);
     throw error;
   }
+};
+
+// 미싱스킬로 스터디그룹 추천
+export const fetchStudyGroupsByMissingSkills = async (missingSkills: string[]): Promise<StudyGroupResponse> => {
+  const response = await axiosInstance.post<StudyGroupResponse>(
+    "/study/group/missing/skills",
+    { missingSkills }
+  );
+  return response.data;
 };

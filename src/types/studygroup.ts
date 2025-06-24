@@ -1,10 +1,12 @@
 // src/types/studyGroup.ts
 export interface StudyGroup {
-  content: string | null;
-  startDate: string;
-  endDate: string;
-  studyGroupId?: string;
-  studyGroupName?: string;
+  studyGroupId: string;
+  studyGroupName: string;
+  description: string;
+  isRecruiting: boolean;
+  startDate?: string;
+  endDate?: string;
+  techStacks?: string[];
   category?: string;
 }
 
@@ -16,7 +18,7 @@ export interface StudyGroupResponse {
 
 export interface StudyGroupUpdateRequest {
   studyGroupId: string;
-  content: string;
+  description: string;
   startDate: string;
   endDate: string;
 }
@@ -25,7 +27,7 @@ export interface StudyGroupCreateRequest {
   userId: string;
   studyGroupName: string;
   category: string;
-  content: string;
+  description: string;
   startDate: string;
   endDate: string;
 }

@@ -1,235 +1,174 @@
-// import { useState } from "react";
-// import Calendar, {CalendarProps} from "react-calendar";
-// import "react-calendar/dist/Calendar.css"; // 기본 스타일 적용
-
-// const CalendarPage = () => {
-//   const [date, setDate] = useState(new Date());
-
-//   const handleDateChange: CalendarProps["onChange"] = (value) => {
-//     if (value instanceof Date) {
-//       setDate(value);
-//     }
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <h1 className="text-2xl font-bold mb-4">📅 Calendar</h1>
-//       <Calendar onChange={handleDateChange} value={date} />
-//       <p className="mt-4">✅ 선택한 날짜: <strong>{date.toDateString()}</strong></p>
-//     </div>
-//   );
-// };
-
-// export default CalendarPage;
-
-// -------------------------------------------------------------------------------------------------------------------------
-/* import { useState } from "react";
-import Calendar, { CalendarProps } from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-
-type Schedule = {
-  date: string; // YYYY-MM-DD 형식
-  event: string; // 일정 이름
-  color: string; // 일정 색상
-};
-
-const CalendarPage = () => {
-  const [date, setDate] = useState<Date>(new Date()); // ✅ 명확한 타입 지정
-
-  // ✅ 일정 데이터 (날짜별 이벤트)
-  const schedules: Schedule[] = [
-    { date: "2025-03-23", event: "토익 시험", color: "green" },
-    { date: "2025-03-25", event: "회의", color: "blue" },
-    { date: "2025-04-01", event: "친구 생일", color: "red" },
-  ];
-
-  // ✅ 특정 날짜에 해당하는 일정 가져오기
-  const getTileContent: CalendarProps["tileContent"] = ({ date }) => {
-    const formattedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
-    const schedule = schedules.find((s) => s.date === formattedDate);
-
-    return schedule ? (
-      <div
-        style={{
-          marginTop: "5px",
-          fontSize: "12px",
-          backgroundColor: schedule.color,
-          color: "white",
-          borderRadius: "5px",
-          padding: "2px 4px",
-        }}
-      >
-        {schedule.event}
-      </div>
-    ) : null;
-  };
-
-  // ✅ `onChange` 핸들러 수정 (event 포함)
-  const handleDateChange: CalendarProps["onChange"] = (value, event) => {
-    if (value instanceof Date) {
-      setDate(value);
-    }
-  };
-
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">📅 캘린더 일정</h1>
-      <Calendar 
-        onChange={handleDateChange} // ✅ 수정된 핸들러 적용
-        value={date} 
-        tileContent={getTileContent} // ✅ 날짜 아래 일정 추가
-      />
-      <p className="mt-4">✅ 선택한 날짜: <strong>{date.toDateString()}</strong></p>
-    </div>
-  );
-};
-
-export default CalendarPage; */
-// -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-/* import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
+import { EventApi } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { EventInput } from "@fullcalendar/core";
+import { createUserSchedule, updateUserSchedule, deleteUserSchedule } from "@/api/user";
+import axiosInstance from "@/api/axios";
 
-const CalendarPage = () => {
-  const [events, setEvents] = useState<EventInput[]>([
-    { id: "1", title: "토익 시험", date: "2025-03-23", color: "pink" },
-    { id: "2", title: "회의", date: "2025-03-25", color: "blue" }
-  ]);
-
-  // ✅ 날짜 클릭 시 일정 추가
-  const handleDateClick = (info: any) => {
-    const title = prompt("일정 내용을 입력하세요:");
-    if (title) {
-      setEvents([...events, { id: String(events.length + 1), title, date: info.dateStr }]);
-    }
-  };
-
-  // ✅ 일정 클릭 시 수정 또는 삭제
-  const handleEventClick = (info: any) => {
-    const action = window.prompt(
-      `"${info.event.title}" 일정을 수정하거나 삭제할 수 있어요.\n\n수정하려면 새로운 제목을 입력하고, 삭제하려면 '삭제'라고 입력하세요.`,
-      info.event.title
-    );
-  
-    if (action === null) return; // 취소
-  
-    if (action === "삭제") {
-      if (window.confirm(`"${info.event.title}" 일정을 삭제할까요?`)) {
-        setEvents(events.filter((event) => event.id !== info.event.id));
-      }
-    } else if (action.trim() !== "") {
-      setEvents(
-        events.map((event) =>
-          event.id === info.event.id ? { ...event, title: action } : event
-        )
-      );
-    }
-  };
-  
-
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">📅 Calendar</h1>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={events}
-        dateClick={handleDateClick} // ✅ 날짜 클릭 시 일정 추가
-        eventClick={handleEventClick} // ✅ 일정 클릭 시 삭제
-        height="auto"
-      />
-    </div>
-  );
+type ScheduleItem = {
+  userScheduleId: string;
+  scheduleContent: string;
+  startDate: string;
+  endDate: string;
+  isFinish: boolean;
 };
 
-export default CalendarPage; */
-
-import { useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { EventInput } from "@fullcalendar/core";
-
 const CalendarPage = () => {
-  const [events, setEvents] = useState<EventInput[]>([
-    { id: "1", title: "토익 시험", date: "2025-03-23", color: "pink" },
-    { id: "2", title: "회의", date: "2025-03-25", color: "blue" }
-  ]);
-
+  const [events, setEvents] = useState<EventInput[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
   const [titleInput, setTitleInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const userId = localStorage.getItem("mainUserId");
+
+  // 전체 일정 조회
+  useEffect(() => {
+    if (!userId) return;
+    const fetchUserSchedules = async () => {
+      try {
+        const res = await axiosInstance.get(`/user/schedule/all/${userId}`);
+        if (res.data.success && Array.isArray(res.data.userScheduleList)) {
+          setEvents(
+            res.data.userScheduleList.map((item: ScheduleItem) => ({
+              id: item.userScheduleId,
+              title: item.scheduleContent,
+              date: item.startDate,
+              end: item.endDate,
+              color: item.isFinish ? "gray" : "green",
+            }))
+          );
+        }
+      } catch {
+        setError("일정 전체 조회 실패");
+      }
+    };
+    fetchUserSchedules();
+  }, [userId]);
 
   // 날짜 클릭 시 새 일정 추가 준비
-  const handleDateClick = (info: any) => {
+  const handleDateClick = (info: { dateStr: string }) => {
     setSelectedDate(info.dateStr);
+    setEndDate(info.dateStr);
     setSelectedEvent(null); // 수정 모드 해제
     setTitleInput(""); // 입력 초기화
+    setError(null);
   };
 
   // 일정 클릭 시 수정 준비
-  const handleEventClick = (info: any) => {
+  const handleEventClick = (info: { event: EventApi }) => {
     setSelectedDate(info.event.startStr);
+    setEndDate(info.event.endStr || info.event.startStr);
     setSelectedEvent({
       id: info.event.id,
       title: info.event.title,
       date: info.event.startStr,
     });
     setTitleInput(info.event.title);
+    setError(null);
   };
 
   // 일정 저장 (추가 or 수정)
-  const handleSave = () => {
-    if (!titleInput || !selectedDate) return;
-
-    if (selectedEvent) {
-      // 수정
-      setEvents(events.map(event =>
-        event.id === selectedEvent.id ? { ...event, title: titleInput, date: selectedDate } : event
-      ));
-    } else {
-      // 추가
-      setEvents([
-        ...events,
-        {
-          id: String(Date.now()), // 고유 ID
-          title: titleInput,
-          date: selectedDate
+  const handleSave = async () => {
+    if (!titleInput || !selectedDate || !endDate) return;
+    setError(null);
+    if (selectedEvent && selectedEvent.id) {
+      // 수정 (서버에도 저장)
+      setLoading(true);
+      try {
+        const res = await updateUserSchedule({
+          userScheduleId: selectedEvent.id,
+          scheduleContent: titleInput,
+          startDate: selectedDate,
+          endDate: endDate,
+        });
+        if (res.success) {
+          setEvents(events.map(event =>
+            event.id === selectedEvent.id
+              ? { ...event, title: titleInput, date: selectedDate, end: endDate }
+              : event
+          ));
+          resetForm();
+        } else {
+          setError(res.message || "일정 수정에 실패했습니다.");
         }
-      ]);
+      } catch {
+        setError("일정 수정 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // 추가 (서버에도 저장)
+      if (!userId) {
+        setError("로그인이 필요합니다.");
+        return;
+      }
+      setLoading(true);
+      try {
+        const res = await createUserSchedule({
+          userId,
+          scheduleContent: titleInput,
+          startDate: selectedDate,
+          endDate: endDate,
+        });
+        if (res.success) {
+          setEvents([
+            ...events,
+            {
+              id: res.userScheduleId,
+              title: titleInput,
+              date: selectedDate,
+              end: endDate,
+              color: "green"
+            }
+          ]);
+          resetForm();
+        } else {
+          setError(res.message || "일정 등록에 실패했습니다.");
+        }
+      } catch {
+        setError("일정 등록 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
     }
-
-    resetForm();
   };
 
   // 일정 삭제
-  const handleDelete = () => {
-    if (selectedEvent) {
-      setEvents(events.filter(event => event.id !== selectedEvent.id));
-      resetForm();
+  const handleDelete = async () => {
+    if (selectedEvent && selectedEvent.id) {
+      setLoading(true);
+      try {
+        const res = await deleteUserSchedule({ userScheduleId: selectedEvent.id });
+        if (res.success) {
+          setEvents(events.filter(event => event.id !== selectedEvent.id));
+          resetForm();
+        } else {
+          setError(res.message || "일정 삭제에 실패했습니다.");
+        }
+      } catch {
+        setError("일정 삭제 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   // 폼 초기화
   const resetForm = () => {
     setSelectedDate("");
+    setEndDate("");
     setSelectedEvent(null);
     setTitleInput("");
+    setError(null);
   };
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">📅 Calendar</h1>
+      <h1 className="mb-4 text-2xl font-bold">📅 Calendar</h1>
 
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -242,36 +181,52 @@ const CalendarPage = () => {
 
       {/* 📌 일정 관리 UI */}
       {selectedDate && (
-        <div className="mt-6 border p-4 rounded-lg shadow-md bg-gray-50">
-          <h2 className="text-lg font-semibold mb-2">
+        <div className="p-4 mt-6 bg-gray-50 rounded-lg border shadow-md">
+          <h2 className="mb-2 text-lg font-semibold">
             {selectedEvent ? "🛠 일정 수정" : "➕ 새 일정 추가"}
           </h2>
-          <p className="mb-2 text-sm text-gray-600">날짜: {selectedDate}</p>
+          <p className="mb-2 text-sm text-gray-600">시작일: {selectedDate}</p>
+          <div className="mb-2">
+            <label className="mr-2 text-sm">종료일:</label>
+            <input
+              type="date"
+              className="px-2 py-1 rounded border"
+              value={endDate}
+              min={selectedDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              disabled={loading}
+            />
+          </div>
           <input
             type="text"
-            className="border px-2 py-1 rounded w-full mb-2"
+            className="px-2 py-1 mb-2 w-full rounded border"
             placeholder="일정 제목 입력"
             value={titleInput}
             onChange={(e) => setTitleInput(e.target.value)}
+            disabled={loading}
           />
+          {error && <div className="mb-2 text-sm text-red-500">{error}</div>}
           <div className="space-x-2">
             <button
               onClick={handleSave}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
+              className="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
+              disabled={loading}
             >
-              저장
+              {loading ? "저장 중..." : "저장"}
             </button>
             {selectedEvent && (
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                disabled={loading}
               >
                 삭제
               </button>
             )}
             <button
               onClick={resetForm}
-              className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-1 rounded"
+              className="px-4 py-1 text-black bg-gray-300 rounded hover:bg-gray-400"
+              disabled={loading}
             >
               취소
             </button>
@@ -283,4 +238,3 @@ const CalendarPage = () => {
 };
 
 export default CalendarPage;
-

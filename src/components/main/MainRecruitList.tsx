@@ -1,34 +1,46 @@
 import { MainRecruitCard } from "./MainRecruitCard";
-
-// Example data for 5 different recruitment cards
-const dummyData = [
-  {
-    title: "Frontend Developer",
-    company: "Tech Corp",
-    location: "San Francisco",
-  },
-  { title: "Backend Developer", company: "Innovatech", location: "New York" },
-  {
-    title: "Data Scientist",
-    company: "Data Analytics Ltd.",
-    location: "Chicago",
-  },
-  {
-    title: "Project Manager",
-    company: "Project Solutions",
-    location: "Los Angeles",
-  },
-  { title: "UI/UX Designer", company: "DesignStudio", location: "Seattle" },
-];
+import { useEffect, useState } from "react";
+import { fetchAllJobPostings } from "@/api/jobPosting";
+import type { JobPosting } from "@/types/jobPosting";
 
 const MainRecruitList = () => {
+  const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchAllJobPostings();
+        if (response.success) {
+          setJobPostings(response.jobPostingList);
+        } else {
+          setError(response.message || "채용공고를 불러오지 못했습니다.");
+        }
+      } catch {
+        setError("서버 연결 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="py-8 text-center">로딩 중...</div>;
+  }
+  if (error) {
+    return <div className="py-8 text-center text-red-500">{error}</div>;
+  }
+
   return (
-    <div className="gap-4 center">
-      {dummyData.map((job, index) => (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      {jobPostings.slice(0, 5).map((job) => (
         <MainRecruitCard
-          key={index}
+          key={job.jobPostingId}
           title={job.title}
-          company={job.company}
+          company={job.companyName}
           location={job.location}
         />
       ))}

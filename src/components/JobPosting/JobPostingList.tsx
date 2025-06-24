@@ -30,7 +30,7 @@ export function JobPostingList({ jobPostings = [], isLoading, error }: JobPostin
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="w-12 h-12 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+        <div className="w-12 h-12 rounded-full border-b-2 border-gray-900 animate-spin"></div>
       </div>
     );
   }
@@ -60,10 +60,10 @@ export function JobPostingList({ jobPostings = [], isLoading, error }: JobPostin
           </TableCaption>
           <TableHeader>
             <TableRow className="bg-gray-50">
-              <TableHead className="w-1/5 px-6 py-4 text-gray-700">기업명</TableHead>
-              <TableHead className="w-2/5 px-6 py-4 text-gray-700">공고명</TableHead>
-              <TableHead className="w-1/5 px-6 py-4 text-gray-700">근무지역</TableHead>
-              <TableHead className="w-1/5 px-6 py-4 text-gray-700">마감일</TableHead>
+              <TableHead className="px-6 py-4 w-1/5 text-gray-700">기업명</TableHead>
+              <TableHead className="px-6 py-4 w-2/5 text-gray-700">공고명</TableHead>
+              <TableHead className="px-6 py-4 w-1/5 text-gray-700">근무지역</TableHead>
+              <TableHead className="px-6 py-4 w-1/5 text-gray-700">마감일</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -71,7 +71,7 @@ export function JobPostingList({ jobPostings = [], isLoading, error }: JobPostin
               <TableRow
                 key={posting.jobPostingId}
                 onClick={() => navigate(`/jobposting/${posting.jobPostingId}`)}
-                className="transition-colors border-b cursor-pointer hover:bg-gray-50"
+                className="border-b transition-colors cursor-pointer hover:bg-gray-50"
               >
                 <TableCell className="px-6 py-4">
                   <div className="font-medium text-gray-900">{posting.companyName}</div>
