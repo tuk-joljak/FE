@@ -13,19 +13,6 @@ const BasicInfoForm = ({ formData, onFormChange, onArrayChange }: BasicInfoFormP
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
-            사용자 ID
-          </label>
-          <input
-            type="text"
-            name="userId"
-            value={formData.userId}
-            onChange={onFormChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            placeholder="사용자 ID를 입력하세요"
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm font-medium text-gray-700">
             희망 직군
           </label>
           <input

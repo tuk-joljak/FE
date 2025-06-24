@@ -29,10 +29,13 @@ export const analyzeResumeInput = async (
   data: ResumeFormData
 ): Promise<ResumeAnalysisResponse> => {
   try {
+    // mainUserId를 localStorage에서 가져와서 data에 추가
+    const mainUserId = localStorage.getItem("mainUserId");
+    const dataWithUserId = { ...data, userId: mainUserId };
     // 이력서 데이터 저장
     const saveResponse = await axiosInstance.post<{ resumeId: string, success: boolean, message: string }>(
       "/resume/input",
-      data,
+      dataWithUserId,
       {
         headers: {
           "Content-Type": "application/json",
